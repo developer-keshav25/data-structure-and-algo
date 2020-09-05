@@ -3,8 +3,8 @@ using namespace std;
 void printDecreasing(int n){
     if(n<1)
     return;
-    cout<<n<<'\n';
     printDecreasing(n-1);
+    cout<<n<<'\n';
 }
 int main(){
     int n;
