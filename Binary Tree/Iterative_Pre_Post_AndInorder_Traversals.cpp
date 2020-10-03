@@ -1,15 +1,16 @@
 #include <iostream>
 #include <stack>
-#include<limits.h>
+#include <queue>
+#include <stack>
 using namespace std;
 struct Node
 {
-    int data;
+    int key;
     Node *left;
     Node *right;
-    Node(int val)
+    Node(int data)
     {
-        data = val;
+        this->key = data;
         left = right = NULL;
     }
 };
@@ -70,55 +71,55 @@ Node *construct(int arr[])
     }
     return root;
 }
+void iterativePrePostInTraversal(Node *root)
+{
+    // stack<Node*>st;//my attempt preorder
+    // st.push(root);
+    // while(st.size()>0){
+    //         Node*node = st.top();st.pop();
+    //         cout<<node->key<<" ";
+    //         if(node->right!=NULL)
+    //         st.push(node->right);
+    //         if(node->left!=NULL)
+    //         st.push(node->left);
 
-int size(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = size(node->left);
-    int rs = size(node->right);
-    return ls + rs + 1;
-}
-int sum(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = sum(node->left);
-    int rs = sum(node->right);
-    return ls + rs + node->data;
-}
-int max(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = max(node->left);
-    int rs = max(node->right);
-    return std::max(node->data, std::max(ls, rs));
-}
+    // }
 
-int min(Node *node)
-{
-    if (node == NULL)
-        return INT16_MAX;
-    int ls = min(node->left);
-    int rs = min(node->right);
-    return std::min(node->data, std::min(ls, rs));
-}
-bool find(Node *node, int val)
-{
-    if (node == NULL)
-        return false;
-    else if (node->data == val)
-        return true;
-    else if (val < node->data)
+    string pre, in, post;
+    stack<Pair *> st;
+    st.push(new Pair(root, 1));
+    while (st.size() > 0)
     {
-        return find(node->left, val);
-    }
-    else
+        Pair *top = st.top();
+        if (top->state == 1)
         {
-            return find(node->right, val);
+            pre += to_string(top->node->key) + string(" ");
+            top->state++;
+            if (top->node->left != NULL)
+            {
+                st.push(new Pair(top->node->left, 1));
+            }
         }
+        else if (top->state == 2)
+        {
+            in += to_string(top->node->key) + string(" ");
+            top->state++;
+            if (top->node->right != NULL)
+            {
+                st.push(new Pair(top->node->right, 1));
+            }
+        }
+        else
+        {
+            post += to_string(top->node->key) + string(" ");
+            st.pop();
+        }
+    }
+    cout << pre << endl
+         << in << endl
+         << post << endl;
 }
+
 int main()
 {
     int n;
@@ -135,16 +136,8 @@ int main()
         else
             arr[i] = 0;
     }
-    int f;
-    cin >> f;
+
     Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
-    cout<<"true";
-    else
-    cout<<"false";
+    iterativePrePostInTraversal(root);
     return 0;
 }

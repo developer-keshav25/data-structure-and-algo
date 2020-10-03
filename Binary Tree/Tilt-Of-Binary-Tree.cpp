@@ -1,15 +1,15 @@
 #include <iostream>
 #include <stack>
-#include<limits.h>
+#include<cstdlib>
 using namespace std;
 struct Node
 {
-    int data;
+    int key;
     Node *left;
     Node *right;
-    Node(int val)
+    Node(int data)
     {
-        data = val;
+        this->key = data;
         left = right = NULL;
     }
 };
@@ -25,7 +25,7 @@ struct Pair
 };
 Node *construct(int arr[])
 {
-    stack<Pair *> st;
+    stack<Pair*> st;
     Node *root = new Node(arr[0]);
     Pair *rtp = new Pair(root, 1);
     st.push(rtp);
@@ -71,54 +71,24 @@ Node *construct(int arr[])
     return root;
 }
 
-int size(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = size(node->left);
-    int rs = size(node->right);
-    return ls + rs + 1;
+static int tilt = 0;
+int sum(Node*root){
+    if(root==NULL)
+    return 0;
+    int count = sum(root->left)+sum(root->right);
+    return count+root->key;
 }
-int sum(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = sum(node->left);
-    int rs = sum(node->right);
-    return ls + rs + node->data;
+int Tilt(Node*node){
+if(node==NULL){
+    return 0;
 }
-int max(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = max(node->left);
-    int rs = max(node->right);
-    return std::max(node->data, std::max(ls, rs));
+int ls = Tilt(node->left);
+int rs = Tilt(node->right);
+int ltilt = std::abs(ls-rs);
+tilt+=ltilt;
+return ls+rs+node->key; 
 }
 
-int min(Node *node)
-{
-    if (node == NULL)
-        return INT16_MAX;
-    int ls = min(node->left);
-    int rs = min(node->right);
-    return std::min(node->data, std::min(ls, rs));
-}
-bool find(Node *node, int val)
-{
-    if (node == NULL)
-        return false;
-    else if (node->data == val)
-        return true;
-    else if (val < node->data)
-    {
-        return find(node->left, val);
-    }
-    else
-        {
-            return find(node->right, val);
-        }
-}
 int main()
 {
     int n;
@@ -135,16 +105,9 @@ int main()
         else
             arr[i] = 0;
     }
-    int f;
-    cin >> f;
-    Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
-    cout<<"true";
-    else
-    cout<<"false";
+    
+    Node*root = construct(arr);
+    Tilt(root);
+    cout<<tilt;   
     return 0;
 }

@@ -79,46 +79,40 @@ int size(Node *node)
     int rs = size(node->right);
     return ls + rs + 1;
 }
-int sum(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = sum(node->left);
-    int rs = sum(node->right);
-    return ls + rs + node->data;
-}
-int max(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = max(node->left);
-    int rs = max(node->right);
-    return std::max(node->data, std::max(ls, rs));
+
+
+void display(Node* node) {
+    if (node == NULL) {
+      return;
+    }
+
+    string str = "";
+    str += node->left == NULL ? "." :to_string(node->left->data) + "";
+    str += " <- " +to_string(node->data) + " -> ";
+    str += node->right == NULL ? "." :to_string(node->right->data) + "";
+    cout<<str<<endl;
+
+    display(node->left);
+    display(node->right);
+  }
+
+void pir(Node*node,int d1,int d2){
+    if(node==NULL)
+    return;
+    if(node->data>d1&&node->data>d2){
+    pir(node->left,d1,d2);
+    }
+    else if(node->data<d1&&node->data<d2){
+    pir(node->right,d1,d2);
+    }
+    else{
+        pir(node->left,d1,d2);
+        cout<<node->data<<'\n';
+        pir(node->right,d1,d2);
+    }
+
 }
 
-int min(Node *node)
-{
-    if (node == NULL)
-        return INT16_MAX;
-    int ls = min(node->left);
-    int rs = min(node->right);
-    return std::min(node->data, std::min(ls, rs));
-}
-bool find(Node *node, int val)
-{
-    if (node == NULL)
-        return false;
-    else if (node->data == val)
-        return true;
-    else if (val < node->data)
-    {
-        return find(node->left, val);
-    }
-    else
-        {
-            return find(node->right, val);
-        }
-}
 int main()
 {
     int n;
@@ -135,16 +129,10 @@ int main()
         else
             arr[i] = 0;
     }
-    int f;
-    cin >> f;
+    
     Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
-    cout<<"true";
-    else
-    cout<<"false";
+    int d1,d2;
+    cin>>d1>>d2;
+    pir(root,d1,d2);
     return 0;
 }

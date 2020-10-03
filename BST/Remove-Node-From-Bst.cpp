@@ -79,46 +79,61 @@ int size(Node *node)
     int rs = size(node->right);
     return ls + rs + 1;
 }
-int sum(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = sum(node->left);
-    int rs = sum(node->right);
-    return ls + rs + node->data;
-}
-int max(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = max(node->left);
-    int rs = max(node->right);
-    return std::max(node->data, std::max(ls, rs));
+
+
+void display(Node* node) {
+    if (node == NULL) {
+      return;
+    }
+
+    string str = "";
+    str += node->left == NULL ? "." :to_string(node->left->data) + "";
+    str += " <- " +to_string(node->data) + " -> ";
+    str += node->right == NULL ? "." :to_string(node->right->data) + "";
+    cout<<str<<endl;
+
+    display(node->left);
+    display(node->right);
+  }
+
+int successor(Node*node){
+    if(node->right==NULL)
+    return node->data;
+    return successor(node->right);
 }
 
-int min(Node *node)
-{
-    if (node == NULL)
-        return INT16_MAX;
-    int ls = min(node->left);
-    int rs = min(node->right);
-    return std::min(node->data, std::min(ls, rs));
-}
-bool find(Node *node, int val)
-{
-    if (node == NULL)
-        return false;
-    else if (node->data == val)
-        return true;
-    else if (val < node->data)
-    {
-        return find(node->left, val);
+Node* remove(Node*root,int  val){
+    if(root==NULL)
+    return NULL;
+    if(val<root->data){
+    root->left = remove(root->left,val);
     }
-    else
-        {
-            return find(node->right, val);
+    else if(val>root->data)
+    {
+        root->right = remove(root->right,val);
+    }
+    else{
+        if(root->left!=NULL&&root->right!=NULL){
+            int sc = successor(root->left);
+            root->data =sc;
+            root->left = remove(root->left,sc);
+            return root; 
         }
+        else if(root->left!=NULL){
+            return root->left;
+            
+        }
+        else if(root->right!=NULL){
+            return root->right;
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+    return root;
 }
+
 int main()
 {
     int n;
@@ -138,13 +153,7 @@ int main()
     int f;
     cin >> f;
     Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
-    cout<<"true";
-    else
-    cout<<"false";
+    root = remove(root,f);
+    display(root);
     return 0;
 }

@@ -119,6 +119,37 @@ bool find(Node *node, int val)
             return find(node->right, val);
         }
 }
+
+void display(Node* node) {
+    if (node == NULL) {
+      return;
+    }
+
+    string str = "";
+    str += node->left == NULL ? "." :to_string(node->left->data) + "";
+    str += " <- " +to_string(node->data) + " -> ";
+    str += node->right == NULL ? "." :to_string(node->right->data) + "";
+    cout<<str<<endl;
+
+    display(node->left);
+    display(node->right);
+  }
+
+Node*add(Node*root,int val){
+    if(root==NULL)
+    return new Node(val);
+    if(val<root->data){
+        root->left = add(root->left,val);
+    }
+    else if(val>root->data){
+        root->right = add(root->right,val);
+    }
+    else{
+        //nothing to do
+    }
+    return root;
+}
+
 int main()
 {
     int n;
@@ -138,13 +169,7 @@ int main()
     int f;
     cin >> f;
     Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
-    cout<<"true";
-    else
-    cout<<"false";
+    root = add(root,f);
+    display(root);
     return 0;
 }

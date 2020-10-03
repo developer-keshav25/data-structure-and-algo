@@ -1,15 +1,17 @@
 #include <iostream>
 #include <stack>
-#include<limits.h>
+#include <queue>
+#include <vector>
+#include<bits/stdc++.h>
 using namespace std;
 struct Node
 {
-    int data;
+    int key;
     Node *left;
     Node *right;
-    Node(int val)
+    Node(int data)
     {
-        data = val;
+        this->key = data;
         left = right = NULL;
     }
 };
@@ -71,54 +73,28 @@ Node *construct(int arr[])
     return root;
 }
 
-int size(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = size(node->left);
-    int rs = size(node->right);
-    return ls + rs + 1;
-}
-int sum(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = sum(node->left);
-    int rs = sum(node->right);
-    return ls + rs + node->data;
-}
-int max(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = max(node->left);
-    int rs = max(node->right);
-    return std::max(node->data, std::max(ls, rs));
+struct BSTPair{
+    bool isBST;
+    int min;
+    int max;
+};
+BSTPair IsBst(Node*root){
+    if(root==NULL){
+        BSTPair bp;
+        bp.max = INT_MIN;
+        bp.min = INT_MAX;
+        bp.isBST = true;
+        return bp;
+    }
+    BSTPair lp = IsBst(root->left);
+    BSTPair rp = IsBst(root->right);
+    BSTPair mp;
+    mp.isBST = lp.isBST&&rp.isBST&&(root->key>=lp.max&&root->key<=rp.min);
+    mp.min = std::min(lp.min,root->key);
+    mp.max = std::max(rp.max,root->key);
+    return mp;
 }
 
-int min(Node *node)
-{
-    if (node == NULL)
-        return INT16_MAX;
-    int ls = min(node->left);
-    int rs = min(node->right);
-    return std::min(node->data, std::min(ls, rs));
-}
-bool find(Node *node, int val)
-{
-    if (node == NULL)
-        return false;
-    else if (node->data == val)
-        return true;
-    else if (val < node->data)
-    {
-        return find(node->left, val);
-    }
-    else
-        {
-            return find(node->right, val);
-        }
-}
 int main()
 {
     int n;
@@ -135,14 +111,10 @@ int main()
         else
             arr[i] = 0;
     }
-    int f;
-    cin >> f;
+
     Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
+    BSTPair res = IsBst(root); 
+    if(res.isBST)
     cout<<"true";
     else
     cout<<"false";

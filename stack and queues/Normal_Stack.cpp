@@ -4,21 +4,21 @@
 #include<sstream>
 using namespace std;
 class Customstack{
-public:
 int *data;
 int tos;
 int len;
+public:
 Customstack(int cap){
     data = new int[cap];
     tos = -1;
-    len  = cap;
+    this->len  = cap;
 }
 int size(){
     return tos+1;
 }
 void push(int val){
     if(tos==len-1)
-    cout<<"stack overflow"<<'\n';
+    cout<<"Stack overflow"<<'\n';
     else{
     ++tos;
     data[tos] = val;}
@@ -29,29 +29,23 @@ void display(){
     {
         cout<<data[i]<<" ";
     }
-    
+   cout<<'\n'; 
 }
 int pop(){
     if(tos==-1){
-    cout<<"stack underflow"<<'\n';
+    cout<<"Stack underflow"<<'\n';
     return -1;
     }
-    else{
     int t = data[tos];
     --tos;
-    cout<<t<<'\n';
     return t;
-    }
 }
 int top(){
     if(tos==-1){
-    cout<<"stack underflow"<<'\n';
+    cout<<"Stack underflow"<<'\n';
     return -1;
     }
-    else{
-    cout<<data[tos]<<'\n';
     return data[tos];
-    }
 }
 };
 int main(){
@@ -62,13 +56,18 @@ string str;
 cin>>str;
 while (str!="quit")
 {
-    if(str=="display"){
+    if(str=="display")
     stack.display();
-    cout<<'\n';}
-    else if(str=="pop")
-    stack.pop();
-    else if(str=="top")
-    stack.top();
+    else if(str=="pop"){
+    int x = stack.pop();
+    if(x!=-1)
+    cout<<x<<'\n';
+    }
+    else if(str=="top"){
+    int x = stack.top();
+    if(x!=-1)
+    cout<<x<<'\n';
+    }
     else if(str=="size")
     cout<<stack.size()<<'\n';
     else if (str=="push"){

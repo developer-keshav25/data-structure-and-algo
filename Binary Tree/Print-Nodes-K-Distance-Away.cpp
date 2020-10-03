@@ -1,15 +1,16 @@
 #include <iostream>
 #include <stack>
-#include<limits.h>
+#include <queue>
+#include <vector>
 using namespace std;
 struct Node
 {
-    int data;
+    int key;
     Node *left;
     Node *right;
-    Node(int val)
+    Node(int data)
     {
-        data = val;
+        this->key = data;
         left = right = NULL;
     }
 };
@@ -70,55 +71,49 @@ Node *construct(int arr[])
     }
     return root;
 }
-
-int size(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = size(node->left);
-    int rs = size(node->right);
-    return ls + rs + 1;
-}
-int sum(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = sum(node->left);
-    int rs = sum(node->right);
-    return ls + rs + node->data;
-}
-int max(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = max(node->left);
-    int rs = max(node->right);
-    return std::max(node->data, std::max(ls, rs));
-}
-
-int min(Node *node)
-{
-    if (node == NULL)
-        return INT16_MAX;
-    int ls = min(node->left);
-    int rs = min(node->right);
-    return std::min(node->data, std::min(ls, rs));
-}
-bool find(Node *node, int val)
-{
-    if (node == NULL)
-        return false;
-    else if (node->data == val)
-        return true;
-    else if (val < node->data)
-    {
-        return find(node->left, val);
+void printKlevelsdown(Node*root,int k,Node*block){
+    if(root==NULL||k<0||root==block)
+    return;
+    if(k==0){
+    cout<<root->key<<'\n';
+     return;
     }
-    else
-        {
-            return find(node->right, val);
-        }
+    printKlevelsdown(root->left,k-1,block);
+    printKlevelsdown(root->right,k-1,block);
 }
+static vector<Node*>path;
+
+bool Find(Node *root, int val)
+{
+    if (root == NULL)
+        return false;
+    if (root->key == val){
+        path.push_back(root);
+        return true;
+    }
+    bool filc = Find(root->left, val);
+    if (filc){
+        path.push_back(root);
+        return true;
+    }
+    bool firc = Find(root->right, val);
+    if (firc){
+        path.push_back(root);
+        return true;
+    }
+    return false;
+}
+
+void printKNodesFar(Node*root,int data ,int k){
+    path = vector<Node*>();
+    Find(root,data);
+    for (int i = 0; i < path.size(); i++)
+    {
+        printKlevelsdown(path[i],k-i,i==0?NULL:path[i-1]);
+    }
+    
+}
+
 int main()
 {
     int n;
@@ -135,16 +130,9 @@ int main()
         else
             arr[i] = 0;
     }
-    int f;
-    cin >> f;
+
     Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
-    cout<<"true";
-    else
-    cout<<"false";
+    int data,k;cin>>data>>k;
+    printKNodesFar(root,data,k);
     return 0;
 }

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <stack>
-#include<limits.h>
+#include <limits.h>
 using namespace std;
 struct Node
 {
@@ -79,31 +79,24 @@ int size(Node *node)
     int rs = size(node->right);
     return ls + rs + 1;
 }
-int sum(Node *node)
+
+void display(Node *node)
 {
     if (node == NULL)
-        return 0;
-    int ls = sum(node->left);
-    int rs = sum(node->right);
-    return ls + rs + node->data;
-}
-int max(Node *node)
-{
-    if (node == NULL)
-        return 0;
-    int ls = max(node->left);
-    int rs = max(node->right);
-    return std::max(node->data, std::max(ls, rs));
+    {
+        return;
+    }
+
+    string str = "";
+    str += node->left == NULL ? "." : to_string(node->left->data) + "";
+    str += " <- " + to_string(node->data) + " -> ";
+    str += node->right == NULL ? "." : to_string(node->right->data) + "";
+    cout << str << endl;
+
+    display(node->left);
+    display(node->right);
 }
 
-int min(Node *node)
-{
-    if (node == NULL)
-        return INT16_MAX;
-    int ls = min(node->left);
-    int rs = min(node->right);
-    return std::min(node->data, std::min(ls, rs));
-}
 bool find(Node *node, int val)
 {
     if (node == NULL)
@@ -115,10 +108,27 @@ bool find(Node *node, int val)
         return find(node->left, val);
     }
     else
-        {
-            return find(node->right, val);
-        }
+    {
+        return find(node->right, val);
+    }
 }
+
+void travelandPrint(Node *root, Node *node, int tar)
+{
+    if (node == NULL)
+        return;
+    travelandPrint(root, node->left, tar);
+    int comp = tar - node->data;
+    if (node->data < comp)
+    {
+        if (find(root, comp))
+        {
+            cout << node->data << " " << comp << '\n';
+        }
+    }
+    travelandPrint(root, node->right, tar);
+}
+
 int main()
 {
     int n;
@@ -135,16 +145,10 @@ int main()
         else
             arr[i] = 0;
     }
-    int f;
-    cin >> f;
+
     Node *root = construct(arr);
-    cout << size(root) << endl;
-    cout << sum(root) << endl;
-    cout << max(root) << endl;
-    cout << min(root) << endl;
-    if(find(root,f))
-    cout<<"true";
-    else
-    cout<<"false";
+    int tar;
+    cin >> tar;
+    travelandPrint(root, root, tar);
     return 0;
 }
