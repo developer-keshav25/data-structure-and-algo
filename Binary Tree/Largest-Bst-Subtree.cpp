@@ -2,7 +2,6 @@
 #include <stack>
 #include <queue>
 #include <vector>
-#include<bits/stdc++.h>
 using namespace std;
 struct Node
 {
@@ -72,11 +71,28 @@ Node *construct(int arr[])
     }
     return root;
 }
+void display(Node *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
 
+    string str = "";
+    str += node->left == NULL ? "." : to_string(node->left->key) + "";
+    str += " <- " + to_string(node->key) + " -> ";
+    str += node->right == NULL ? "." : to_string(node->right->key) + "";
+    cout << str << endl;
+
+    display(node->left);
+    display(node->right);
+}
 struct BSTPair{
-    bool isBST;
-    int min;
-    int max;
+    bool isBST; //if bst or not
+    int min; //min of bst
+    int max;//max of bst
+    Node* lbstr;//root of largest bst
+    int lbsts;//size of largest bst
 };
 BSTPair IsBst(Node*root){
     if(root==NULL){
@@ -84,6 +100,8 @@ BSTPair IsBst(Node*root){
         bp.max = INT32_MIN;
         bp.min = INT32_MAX;
         bp.isBST = true;
+        bp.lbstr = NULL;
+        bp.lbsts = 0;
         return bp;
     }
     BSTPair lp = IsBst(root->left);
@@ -92,8 +110,24 @@ BSTPair IsBst(Node*root){
     mp.isBST = lp.isBST&&rp.isBST&&(root->key>=lp.max&&root->key<=rp.min);
     mp.min = std::min(lp.min,root->key);
     mp.max = std::max(rp.max,root->key);
+    if(mp.isBST){
+        mp.lbstr = root;
+        mp.lbsts = lp.lbsts + rp.lbsts +1;
+    }
+    else if (lp.lbsts>rp.lbsts)
+    {
+        mp.lbstr = lp.lbstr;
+        mp.lbsts = lp.lbsts;
+    }
+    else{
+        mp.lbstr = rp.lbstr;
+        mp.lbsts = rp.lbsts;
+    }
+    
     return mp;
 }
+
+
 
 int main()
 {
@@ -111,12 +145,8 @@ int main()
         else
             arr[i] = 0;
     }
-
     Node *root = construct(arr);
-    BSTPair res = IsBst(root); 
-    if(res.isBST)
-    cout<<"true";
-    else
-    cout<<"false";
+    BSTPair res = IsBst(root);
+    cout<<res.lbstr->key<<"@"<<res.lbsts; 
     return 0;
 }

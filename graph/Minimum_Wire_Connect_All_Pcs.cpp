@@ -17,14 +17,7 @@ struct Pair{
         return this->wsf>o.wsf;
     }
 };
-// struct Compare
-// {
-// public:
-//     int operator() (const Pair &p1, const Pair &p2)
-//     {
-//         return p2.wsf-p1.wsf;
-//     }
-// };
+
 class Graph
 {
 public:

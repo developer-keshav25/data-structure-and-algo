@@ -14,31 +14,28 @@ public:
         this->data = data;
     }
 };
-
-void display(Node *root)
-{
+void display(Node*root){
     string str = to_string(root->data) + " -> ";
-    for (auto child : root->children)
-    {
-        str += to_string(child->data) + ", ";
+    for (auto child : root->children) {
+      str += to_string(child->data) + ", ";
     }
     str += ".";
-    cout << str << '\n';
+    cout<<str<<'\n';
 
-    for (auto child : root->children)
-    {
-        display(child);
+    for (auto child : root->children) {
+      display(child);
     }
 }
 
-static Node* predecessor;
-static Node* successor;
-static int state;
+
+static Node* predecessor = NULL;
+static Node* successor  = NULL;
+static int state = 0;
 void predecessorAndSuccessor(Node *node, int data)
 {
     if (state == 0)
     {
-        if (node->data = data)
+        if (node->data == data)
         {
             state = 1;
         }
@@ -87,10 +84,8 @@ int main()
             st.push(t);
         }
     }
+
     int val;cin>>val;
-    predecessor = NULL;
-    successor = NULL;
-    state = 0;
     predecessorAndSuccessor(root,val);
     if(predecessor == NULL){
       cout<<"Predecessor = Not found"<<'\n';

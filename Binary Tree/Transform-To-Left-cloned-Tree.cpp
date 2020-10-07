@@ -2,7 +2,6 @@
 #include <stack>
 #include <queue>
 #include <vector>
-#include<bits/stdc++.h>
 using namespace std;
 struct Node
 {
@@ -72,27 +71,33 @@ Node *construct(int arr[])
     }
     return root;
 }
-
-struct BSTPair{
-    bool isBST;
-    int min;
-    int max;
-};
-BSTPair IsBst(Node*root){
-    if(root==NULL){
-        BSTPair bp;
-        bp.max = INT32_MIN;
-        bp.min = INT32_MAX;
-        bp.isBST = true;
-        return bp;
+void display(Node *node)
+{
+    if (node == NULL)
+    {
+        return;
     }
-    BSTPair lp = IsBst(root->left);
-    BSTPair rp = IsBst(root->right);
-    BSTPair mp;
-    mp.isBST = lp.isBST&&rp.isBST&&(root->key>=lp.max&&root->key<=rp.min);
-    mp.min = std::min(lp.min,root->key);
-    mp.max = std::max(rp.max,root->key);
-    return mp;
+
+    string str = "";
+    str += node->left == NULL ? "." : to_string(node->left->key) + "";
+    str += " <- " + to_string(node->key) + " -> ";
+    str += node->right == NULL ? "." : to_string(node->right->key) + "";
+    cout << str << endl;
+
+    display(node->left);
+    display(node->right);
+}
+
+Node *createLeftCloneTree(Node *node)
+{
+    if (node == NULL)
+        return NULL;
+    Node *lcr = createLeftCloneTree(node->left);
+    node->right = createLeftCloneTree(node->right);
+    Node *nn = new Node(node->key);
+    nn->left = lcr;
+    node->left = nn;
+    return node;
 }
 
 int main()
@@ -111,12 +116,8 @@ int main()
         else
             arr[i] = 0;
     }
-
     Node *root = construct(arr);
-    BSTPair res = IsBst(root); 
-    if(res.isBST)
-    cout<<"true";
-    else
-    cout<<"false";
+    root = createLeftCloneTree(root);
+    display(root);
     return 0;
 }

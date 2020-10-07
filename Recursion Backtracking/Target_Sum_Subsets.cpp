@@ -1,7 +1,12 @@
 #include <iostream>
 using namespace std;
+//sos:sum of set
 void tss(int arr[], int tar, int idx, int sos, string set, int n)
 {
+    if(sos>tar){
+        return;
+    }
+    
     if (idx == n)
     {
         if (sos == tar)

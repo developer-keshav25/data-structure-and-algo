@@ -2,7 +2,6 @@
 #include <stack>
 #include <queue>
 #include <vector>
-#include<bits/stdc++.h>
 using namespace std;
 struct Node
 {
@@ -72,29 +71,60 @@ Node *construct(int arr[])
     }
     return root;
 }
-
-struct BSTPair{
-    bool isBST;
-    int min;
-    int max;
-};
-BSTPair IsBst(Node*root){
-    if(root==NULL){
-        BSTPair bp;
-        bp.max = INT32_MIN;
-        bp.min = INT32_MAX;
-        bp.isBST = true;
-        return bp;
+void display(Node *node)
+{
+    if (node == NULL)
+    {
+        return;
     }
-    BSTPair lp = IsBst(root->left);
-    BSTPair rp = IsBst(root->right);
-    BSTPair mp;
-    mp.isBST = lp.isBST&&rp.isBST&&(root->key>=lp.max&&root->key<=rp.min);
-    mp.min = std::min(lp.min,root->key);
-    mp.max = std::max(rp.max,root->key);
-    return mp;
+
+    string str = "";
+    str += node->left == NULL ? "." : to_string(node->left->key) + "";
+    str += " <- " + to_string(node->key) + " -> ";
+    str += node->right == NULL ? "." : to_string(node->right->key) + "";
+    cout << str << endl;
+
+    display(node->left);
+    display(node->right);
 }
 
+int height(Node *root)
+{
+    if (root == NULL)
+        return -1;
+    int lh = height(root->left);
+    int rh = height(root->right);
+    return std::max(lh, rh) + 1;
+}
+
+int Diameter1(Node *node)
+{
+    if (node == NULL)
+    {
+        return 0;
+    }
+    int ld = Diameter1(node->left);
+    int rd = Diameter1(node->right);
+    int f = height(node->left) + height(node->right) + 2;
+    int dia = std::max(f, std::max(ld, rd));
+    return dia;
+}
+
+static int dia = 0;
+
+int CalculateDiaReturnHeight(Node *node)
+{
+    if (node == NULL)
+    {
+        return -1;
+    }
+    int lh = CalculateDiaReturnHeight(node->left);
+    int rh  = CalculateDiaReturnHeight(node->right); 
+    if(lh+rh+2>dia){
+        dia = lh+rh+2;
+    }
+    return max(lh,rh)+1;
+}
 int main()
 {
     int n;
@@ -111,12 +141,9 @@ int main()
         else
             arr[i] = 0;
     }
-
     Node *root = construct(arr);
-    BSTPair res = IsBst(root); 
-    if(res.isBST)
-    cout<<"true";
-    else
-    cout<<"false";
+    // cout<<Diameter1(root);
+    CalculateDiaReturnHeight(root);
+    cout<<dia;
     return 0;
 }
